@@ -13,7 +13,6 @@ const UserSchema = new Schema({
     phoneNumber: {
         type: Number,
         required: true,
-        unique: true,
     },
     email: {
         type: String,
@@ -42,7 +41,7 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['RH', 'Employee'],
+        enum: ['Admin', 'Employee'],
 
     }
 }, { timestamps: true });

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
+const auth = require('./routes/auth');
 
 
 const port = 5000;
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use('/api/auth/user',auth)
 
 
 

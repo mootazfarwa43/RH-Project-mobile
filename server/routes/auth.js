@@ -64,43 +64,40 @@ router.post('/register', [
 
 // login Route
 router.post('/login', [
-
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Password cannot be blank').exists(),
-
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ error: errors.array() })
+        return res.status(400).json({ error: errors.array() });
     }
 
-    const { email, password, } = req.body;
+    const { email, password } = req.body;
     try {
         let user = await User.findOne({ email });
         if (!user) {
-
-            return res.status(400).send({ success, error: "User not found" })
+            return res.status(400).send({ success: false, error: "User not found" });
         }
-        const passComp = await bcrypt.compare(password, user.password)
+
+        const passComp = await bcrypt.compare(password, user.password);
         if (!passComp) {
-            return res.status(400).send({ success, error: "Please try to login with correct credentials" })
+            return res.status(400).send({ success: false, error: "Please try to login with correct credentials" });
         }
 
         const data = {
             user: {
                 id: user._id
             }
-        }
+        };
 
-        const authToken = jwt.sign(data, process.env.JWT_SECRET)
-        success = true
-        res.send({ success, authToken })
+        const authToken = jwt.sign(data, process.env.JWT_SECRET);
+        res.send({ success: true, authToken });
+    } catch (error) {
+        console.error('Error logging in:', error); // Add this line to log the error
+        res.status(500).send("Internal server error002");
     }
-    catch (error) {
-        res.status(500).send("Internal server error002")
-    }
-}
-);
+});
+
 // logged in user details
 
 router.get('/getuser', authUser, async (req, res) => {
